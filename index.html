@@ -6,16 +6,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+<style>
+  .tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0lax{text-align:left;vertical-align:top}
+</style>
 <body>
 
 <button class="btn-xlsx" type="button" onclick="">엑셀로드</button>
 
-</body>
+<table class="tg">
+  <thead>
+    <tr>
+      <th class="tg-0lax">일자</th>
+      <th class="tg-0lax">내용</th>
+      <th class="tg-0lax">금액</th>
+      <th class="tg-0lax">영수증</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="data1">
+      <td class="tg-0lax tg-0lax1"></td>
+      <td class="tg-0lax tg-0lax2"></td>
+      <td class="tg-0lax tg-0lax3"></td>
+      <td class="tg-0lax tg-0lax4"></td>
+    </tr>
+  </tbody>
+  </table>
 
+
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-  function getData() {
+ const data = axios.post("/");
+ const testTarget = document.querySelector(".data1")
+
+  data.then(function(res) {
+    // console.log(res.data)
+
+    const data = res.data;
+    const dataLength = 4;
+
+    let tbody = document.querySelector("tbody");
+
+    const addDataRaw = document.createElement("tr");
+
+    data.forEach(ele => {
+      console.log(ele)
+      Object.entries(ele).map(([key, value], index)=> {
+        // console.log(ele)
+
+        // if(index >0) {
+        //   const test= testTarget.querySelector(`.tg-0lax${index}`);
+        //   test.innerHTML = value
+
+        // }
+
+      })
+
+    });
+
     
-  }
+
+
+
+    
+  })
+
+
 ;
 </script>
 </html>
