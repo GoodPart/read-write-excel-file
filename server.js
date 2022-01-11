@@ -19,7 +19,7 @@ let distObject = [];
 
 
 fileArray.map((item, index1)=> {
-  let xlxsData = []; // 데이터를 받을 리스트(1.xlxs, 2.xlxs ...)
+  let xlsxData = []; // 데이터를 받을 리스트(1.xlxs, 2.xlxs ...)
 
   
   const excelFile = xlsx.readFile(`./testData/${item}`);
@@ -60,15 +60,15 @@ fileArray.map((item, index1)=> {
             data4 : value[4],
             data5 : getBankInfo
           }
-          xlxsData.push(data2)
+          xlsxData.push(data2)
         }
         
       }
       
     })
     
-  mergeObject = mergeObject.concat({xlxsData})
-  console.log(`${index1} 번째 xlsx 파일 종료 ${xlxsData.length}-------------.`)
+  mergeObject = mergeObject.concat({xlsxData})
+  console.log(`${index1} 번째 xlsx 파일 종료 ${xlsxData.length}-------------.`)
 
   if(index1 == fileArray.length) {
     return mergeObject 

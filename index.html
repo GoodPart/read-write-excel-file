@@ -36,14 +36,14 @@ tr, td {
       <th class="tg-0lax">계좌번호</th>
     </tr>
   </thead>
-  <tbody>
+  <!-- <tbody> -->
     <!-- <tr class="data1">
       <td class="tg-0lax tg-0lax1"></td>
       <td class="tg-0lax tg-0lax2"></td>
       <td class="tg-0lax tg-0lax3"></td>
       <td class="tg-0lax tg-0lax4"></td>
     </tr> -->
-  </tbody>
+  <!-- </tbody> -->
   </table>
 
 
@@ -52,20 +52,33 @@ tr, td {
 <script>
  const data = axios.post("/");
  const tbody = document.querySelector("tbody");
+ const table = document.querySelector("table");
 
   data.then(function(res) {
     const data = res.data;
     const dataLength = data.length;
-    console.log(data)
+
     data.forEach((ele, index1) => {
+      // console.log(ele)
       let globalNumb = 0;
-      const addDataRaw = document.createElement("tr");
-      const mkRaw = addDataRaw.classList.add(`data${index1}`);
-      tbody.appendChild(addDataRaw)
+      const makedTbody = document.querySelector(`tbody${index1}`);
+
+
+      
       
 
       // 빈 테이블 생성
       const makeTable = () => {
+
+        const makeTbody = document.createElement("tbody");
+        const AddClassTbody = makeTbody.classList.add(`tbody${index1}`);
+        table.appendChild(makeTbody);
+
+
+        const addDataRaw = document.createElement("tr");
+        const mkRaw = addDataRaw.classList.add(`data${index1}`);
+        makeTbody.appendChild(addDataRaw)
+
         if( index1 == 0) {
 
           for(let i = 0; i<10; i++) {
@@ -97,20 +110,27 @@ tr, td {
       // makeTable함수로 생성된 장소에 데이터 삽입.
       Object.entries(ele).map(([key, value], index)=> {
 
+        const testTbody = document.querySelector(`.tbody${index1}`)
+        // console.log(value[index])
          
-        const test= tbody.querySelector(`.data${index1} .cell${index}`);
+        const test= testTbody.querySelector(`.data${index1} .cell${index}`);
 
           if(index1 == 0) {
             
             document.querySelector(".cell0").innerHTML = globalNumb;
 
             const test2=document.querySelector(`.data${index1} .cell${index+1}`);
-            test2.innerHTML = value;
+            // test2.innerHTML = value[index].;
+
+            for(let i = 0; i <5; i++) {
+              // test2.innerHTML = value[index]
+              console.log(value[i])
+            }
 
 
             if(index == 5) {
               for(let j = 0; j<4; j++) {
-                const test2 = tbody.querySelector(`.data${index1} .cell${index+j+1}`)
+                const test2 = testTbody.querySelector(`.data${index1} .cell${index+j+1}`)
                 const valueTable = Object.values(value); 
     
                 test2.innerHTML =  valueTable[j];
@@ -131,9 +151,6 @@ tr, td {
 
     
 
-
-
-    
   })
 
 
