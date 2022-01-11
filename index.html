@@ -108,10 +108,10 @@ tr, td {
       makeTable();
       
       // makeTable함수로 생성된 장소에 데이터 삽입.
-      Object.entries(ele).map(([key, value], index)=> {
+      Object.entries(ele).map( ( [key, value], index)=> {
+        // console.log(index)
 
         const testTbody = document.querySelector(`.tbody${index1}`)
-        // console.log(value[index])
          
         const test= testTbody.querySelector(`.data${index1} .cell${index}`);
 
@@ -119,13 +119,20 @@ tr, td {
             
             document.querySelector(".cell0").innerHTML = globalNumb;
 
-            const test2=document.querySelector(`.data${index1} .cell${index+1}`);
-            // test2.innerHTML = value[index].;
+            const test2 = document.querySelector(`.data${index1} .cell${index+1}`);
+            // console.log(value[index].data0)
 
-            for(let i = 0; i <5; i++) {
-              // test2.innerHTML = value[index]
-              console.log(value[i])
-            }
+            // test2.innerHTML = value[index][index]
+            Object.values(value).map((ele, index2) => {
+              console.log(ele, index2)
+              
+            })
+            
+              // Object.values(value[index1]).map((ele)=> {
+              //   test2.innerHTML = ele
+
+
+              // })
 
 
             if(index == 5) {
@@ -157,3 +164,160 @@ tr, td {
 ;
 </script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 수정전 -->
+
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+tr, td {
+  text-align: center;
+}
+</style>
+<body>
+
+<button class="btn-xlsx" type="button" onclick="">엑셀로드</button>
+
+<table class="tg">
+  <thead>
+    <tr>
+      <th class="tg-0lax">대번호</th>
+      <th class="tg-0lax">번호</th>
+      <th class="tg-0lax">일자</th>
+      <th class="tg-0lax">내용</th>
+      <th class="tg-0lax">금액</th>
+      <th class="tg-0lax">영수증</th>
+      <th class="tg-0lax">총액수</th>
+      <th class="tg-0lax">은행</th>
+      <th class="tg-0lax">이름</th>
+      <th class="tg-0lax">계좌번호</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+  </tbody>
+  </table>
+
+
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+ const data = axios.post("/");
+ const tbody = document.querySelector("tbody");
+
+  data.then(function(res) {
+    const data = res.data;
+    const dataLength = data.length;
+
+    data.forEach((ele, index1) => {
+      console.log(data)
+      let globalNumb = 0;
+
+      
+      
+
+      // 빈 테이블 생성
+      const makeTable = () => {
+        const addDataRaw = document.createElement("tr");
+        const mkRaw = addDataRaw.classList.add(`data${index1}`);
+        tbody.appendChild(addDataRaw)
+
+        if( index1 == 0) {
+
+          for(let i = 0; i<10; i++) {
+  
+            const addDataCell = document.createElement("td");
+            const mkCell = addDataCell.classList.add(`cell${i}`);
+            const makedCell = addDataRaw.appendChild(addDataCell);
+  
+            if(i == 0) {
+              document.querySelector(".cell0").setAttribute("rowspan",dataLength)
+            }
+            if(i >= 6 && i <=9) {
+              makedCell.setAttribute("rowspan", dataLength);
+            }
+          }
+        } else {
+          for(let i = 0; i<5; i++) {
+  
+            const addDataCell = document.createElement("td");
+            const mkCell = addDataCell.classList.add(`cell${i}`);
+            const makedCell = addDataRaw.appendChild(addDataCell);
+            
+          }
+        }
+      }
+
+      makeTable();
+      
+      // makeTable함수로 생성된 장소에 데이터 삽입.
+      Object.entries(ele).map(([key, value], index)=> {
+
+         
+        const test= tbody.querySelector(`.data${index1} .cell${index}`);
+
+          if(index1 == 0) {
+            
+            document.querySelector(".cell0").innerHTML = globalNumb;
+
+            const test2=document.querySelector(`.data${index1} .cell${index+1}`);
+            test2.innerHTML = value;
+
+
+            if(index == 5) {
+              for(let j = 0; j<4; j++) {
+                const test2 = tbody.querySelector(`.data${index1} .cell${index+j+1}`)
+                const valueTable = Object.values(value); 
+    
+                test2.innerHTML =  valueTable[j];
+              }
+            }
+          }  else {
+            if(index < 5) {
+              test.innerHTML = value;
+            }
+          }
+        
+
+
+      })
+      globalNumb+= 1
+
+    });
+
+    
+
+  })
+
+
+;
+</script>
+</html> -->
