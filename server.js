@@ -6,40 +6,135 @@ const cors = require("cors");
 
 const cell = '__EMPTY';
 const xlsx = require("xlsx");
+const fs = require('fs');
+const dir = 'testData';
 
-const excelFile = xlsx.readFile("./testData/202112_문화비(코드234)_박경수.xlsx");
+let files = fs.readdirSync(dir);
+const fileArray = files;
+// console.log('디렉토리 구조 array',fileArray )
 
-const sheetName = excelFile.SheetNames[0];
-const firstSheet = excelFile.Sheets[sheetName];
+let mergeObject = [];
 
-const jsonData = xlsx.utils.sheet_to_json(firstSheet, {raw: false,});
+let distObject = [];
 
-let globalObject = [];
 
-let globalData = []; // 데이터를 받을 리스트(1.xlxs, 2.xlxs ...)
+fileArray.map((item, index1)=> {
+  let xlxsData = []; // 데이터를 받을 리스트(1.xlxs, 2.xlxs ...)
 
-const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
-  // key0 = 코드 번호
-  // key1 = head값(번호 ,일자, 내용 ,금액, 영수증, 비고)
+  
+  const excelFile = xlsx.readFile(`./testData/${item}`);
 
-  let innerDataArray = [];
+  const sheetName = excelFile.SheetNames[0];
+  const firstSheet = excelFile.Sheets[sheetName];
 
-    const data = {
-      data0 : value.__EMPTY,
-      data1 : value.__EMPTY_1,
-      data2 : value.__EMPTY_2,
-      data3 : value.__EMPTY_3,
-    }
+  const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw: false });
+
+  const getBankInfo = {
+    data0 : firstSheet['E25'].v,
+    data1 : firstSheet['B28'].v,
+    data2 : firstSheet['D28'].v,
+    data3 : firstSheet['E28'].v
+  }
+  // console.log(getBankInfo)
+
+
+  console.log(`${index1} 번째 xlsx 파일 시작.`)
+
+  const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
+    // key0 = 코드 번호
+    // key1 = head값(번호 ,일자, 내용 ,금액, 영수증, 비고)
+  
+    console.log("map 실행")
+      
+      if(key >=3 && key<=22) {
+  
+        if(value[1] == undefined) {
+          // console.log("데이터가 없음------------------")
+        }
+        else {
+          const data2 = {
+            data0 : value[0],
+            data1 : value[1],
+            data2 : value[2],
+            data3 : value[3],
+            data4 : value[4],
+            data5 : getBankInfo
+          }
+          xlxsData.push(data2)
+        }
+        
+      }
+      
+    })
     
-    const result = globalData.push(data);
+  mergeObject = mergeObject.concat({xlxsData})
+  console.log(`${index1} 번째 xlsx 파일 종료 ${xlxsData.length}-------------.`)
 
-    console.log(jsonData.length, index)
-
-    return result;
+  if(index1 == fileArray.length) {
+    return mergeObject 
+  }
 })
 
-console.log(globalData[1]) // head
-console.log(globalData[2])
+
+
+
+
+
+
+
+// const excelFile = xlsx.readFile("./testData/202112_문화비(코드234)_박경수.xlsx");
+
+// const sheetName = excelFile.SheetNames[0];
+// const firstSheet = excelFile.Sheets[sheetName];
+
+// const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw: false });
+
+// const getBankInfo = {
+//   data0 : firstSheet['E25'].v,
+//   data1 : firstSheet['B28'].v,
+//   data2 : firstSheet['D28'].v,
+//   data3 : firstSheet['E28'].v
+// }
+
+// let globalIndex = 1;
+
+// let globalData = []; // 데이터를 받을 리스트(1.xlxs, 2.xlxs ...)
+
+// const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
+//   // key0 = 코드 번호
+//   // key1 = head값(번호 ,일자, 내용 ,금액, 영수증, 비고)
+
+//   let innerDataArray = [];
+
+    
+    
+//     if(key >=3 && key<=22) {
+
+//       if(value[1] == undefined) {
+//         // console.log("데이터가 없음------------------")
+//       }
+//       else {
+//         const data2 = {
+//           // globalIndex: globalIndex,
+//           data0 : value[0],
+//           data1 : value[1],
+//           data2 : value[2],
+//           data3 : value[3],
+//           data4 : value[4],
+//           data5 : getBankInfo
+//         }
+//         // console.log('3이상 22이하',data2)
+//         const result = globalData.push(data2);
+//          return result;
+
+//       }
+      
+//       globalIndex += 1;
+
+      
+
+//     }
+// })
 
 
 
@@ -50,7 +145,7 @@ console.log(globalData[2])
 // })
 app.post('/', function(req,res) {
   // console.log(res.jsonData)
-  return res.json(globalData)
+  return res.json(mergeObject)
 })
 
 app.get('/', function(req, res) { 
