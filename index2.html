@@ -18,18 +18,18 @@ tr, td {
 </style>
 <body>
 
-<button class="btn-xlsx" type="button" onclick="makeTable()">엑셀로드</button>
+<button class="btn-xlsx" type="button" onclick="loadXlsx()">엑셀로드</button>
 
 
 <div>
   <p>1. 이름</p>
-  <input type="text" name="" placeholder="이름" onfocus="placeholder=''"  id="">
+  <input type="text" name="topicName" placeholder="이름" onfocus="placeholder=''"  id="">
   <p>2. 파일명</p>
-  <input type="text" name="" placeholder="파일명" onfocus="placeholder=''"  id="">
+  <input type="text" name="topicFileName" placeholder="파일명" onfocus="placeholder=''"  id="">
   <p>3. 타입</p>
-  <input type="text" name="" placeholder="문화비, 자기계발비..." onfocus="placeholder=''" id="">
+  <input type="text" name="topicType" placeholder="문화비, 자기계발비..." onfocus="placeholder=''" id="">
   <p>4. 코드</p>
-  <input type="number" name="" placeholder="코드" onfocus="placeholder=''" id="">
+  <input type="number" name="topicCode" placeholder="코드" onfocus="placeholder=''" id="">
 
   <hr />
   <button type="button" onclick="makeRow()">아이템 생성</button>
@@ -61,7 +61,7 @@ tr, td {
   </table>
 
   <div>
-    청구 금액<p class="totalCost">0</p>
+    청구 금액 - <span class="totalCost">0</span>
   </div>
 
 
@@ -98,6 +98,67 @@ tr, td {
 </body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+
+
+
+// 데이터 스키마
+const testData = {
+  data : {
+    // 파일 명
+    topic : {
+      data1 : 202112, //날짜
+      data2 : "문화비", //문화비, 자기계발비...
+      data3 : "234", // 코드
+      data4 : "박경수", //이름
+    },
+    //사용 내역
+    item : [
+      {
+        data1 : 2021-12-22, 
+        data2 : "커피",
+        data3 : 9800,
+        data4 : true,
+      },
+      {
+        data1 : 2021-12-22, 
+        data2 : "커피",
+        data3 : 9800,
+        data4 : true,
+      },
+      // {...}
+    ],
+    // 은행 정보
+    bankInfo : {
+      data1 : "하나은행",
+      data2 : "박경수",
+      data3 : "373-911852-74107"
+    }
+  }
+}
+
+function loadXlsx() {
+  const topicInputInfoArray = ["topicName", "topicFileName", "topicType", "topicCode"];
+
+  topicInputInfoArray.map((ele, index)=> {
+    const target = document.querySelector(`input[name="${ele}"]`);
+
+    console.log(target.value)
+
+    testData.data.topic[index] = target.value
+
+  })
+
+  goData
+}
+
+
+
+const goData =  axios.post("http://localhost:3000/test", {
+  testData
+}).then((res)=> {
+  console.log(res.data)
+})
+
 //  const data = axios.post("/");
  const tbody = document.querySelector("tbody");
  
@@ -153,10 +214,6 @@ function makeRow() {
 }
 
 
-
-
-
-
 function calcCost() {
    const costCells = document.querySelectorAll(".item03 input");
    const array = [];
@@ -183,104 +240,96 @@ function calcCost() {
 }
 
 
-
-
-// const array = [];
 window.addEventListener("keyup", (e)=> {
-//  const costCells = document.querySelectorAll(".item03 input");
-
  const elementTarget = e.target;
- 
  if(elementTarget.className == "calcInput") {
   calcCost()
+
   
-  // totalCost.innerHTML =
 
   }
-  
-//   // console.log(array)
-} )
+})
 
 // 테이블 바디 생성
 
 
-  data.then(function(res) {
-    const data = res.data;
-    const dataLength = data.length;
+  // data.then(function(res) {
+  //   const data = res.data;
+  //   const dataLength = data.length;
 
-    console.log(data)
-    data.forEach((ele, index1) => {
+  //   console.log(data)
+  //   data.forEach((ele, index1) => {
 
       
       
 
-      // 빈 테이블 생성
-      const makeTable = () => {
-        const addDataRaw = document.createElement("tr");
-        const mkRaw = addDataRaw.classList.add(`data${index1}`);
-        tbody.appendChild(addDataRaw)
+  //     // 빈 테이블 생성
+  //     const makeTable = () => {
+  //       const addDataRaw = document.createElement("tr");
+  //       const mkRaw = addDataRaw.classList.add(`data${index1}`);
+  //       tbody.appendChild(addDataRaw)
 
-        if( index1 == 0) {
+  //       if( index1 == 0) {
 
-          for(let i = 0; i<9; i++) {
+  //         for(let i = 0; i<9; i++) {
   
-            const addDataCell = document.createElement("td");
-            const mkCell = addDataCell.classList.add(`cell${i}`);
-            const makedCell = addDataRaw.appendChild(addDataCell);
+  //           const addDataCell = document.createElement("td");
+  //           const mkCell = addDataCell.classList.add(`cell${i}`);
+  //           const makedCell = addDataRaw.appendChild(addDataCell);
   
-            if(i >= 5 && i <=8) {
-              makedCell.setAttribute("rowspan", dataLength);
-            }
-          }
-        } else {
-          for(let i = 0; i<5; i++) {
+  //           if(i >= 5 && i <=8) {
+  //             makedCell.setAttribute("rowspan", dataLength);
+  //           }
+  //         }
+  //       } else {
+  //         for(let i = 0; i<5; i++) {
   
-            const addDataCell = document.createElement("td");
-            const mkCell = addDataCell.classList.add(`cell${i}`);
-            const makedCell = addDataRaw.appendChild(addDataCell);
+  //           const addDataCell = document.createElement("td");
+  //           const mkCell = addDataCell.classList.add(`cell${i}`);
+  //           const makedCell = addDataRaw.appendChild(addDataCell);
             
-          }
-        }
-      }
+  //         }
+  //       }
+  //     }
 
-      makeTable();
+  //     makeTable();
       
-      // makeTable함수로 생성된 장소에 데이터 삽입.
-      Object.entries(ele).map(([key, value], index)=> {
+  //     // makeTable함수로 생성된 장소에 데이터 삽입.
+  //     Object.entries(ele).map(([key, value], index)=> {
 
          
-        const test= tbody.querySelector(`.data${index1} .cell${index}`);
+  //       const test= tbody.querySelector(`.data${index1} .cell${index}`);
 
-          if(index1 == 0) {
+  //         if(index1 == 0) {
             
 
-            const test2=document.querySelector(`.data${index1} .cell${index}`);
-            test2.innerHTML = value;
+  //           const test2=document.querySelector(`.data${index1} .cell${index}`);
+  //           test2.innerHTML = value;
 
 
-            if(index == 5) {
-              for(let j = 0; j<4; j++) {
-                const test2 = tbody.querySelector(`.data${index1} .cell${index+j}`)
-                const valueTable = Object.values(value); 
+  //           if(index == 5) {
+  //             for(let j = 0; j<4; j++) {
+  //               const test2 = tbody.querySelector(`.data${index1} .cell${index+j}`)
+  //               const valueTable = Object.values(value); 
     
-                test2.innerHTML =  valueTable[j];
-              }
-            }
-          }  else {
-            if(index < 5) {
-              test.innerHTML = value;
-            }
-          }
+  //               test2.innerHTML =  valueTable[j];
+  //             }
+  //           }
+  //         }  else {
+  //           if(index < 5) {
+  //             test.innerHTML = value;
+  //           }
+  //         }
         
 
 
-      })
+  //     })
 
-    });
+  //   });
 
     
 
-  })
+  // })
 
 
 ;

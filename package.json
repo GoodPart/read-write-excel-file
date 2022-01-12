@@ -19,6 +19,7 @@
   "homepage": "https://github.com/GoodPart/read-write-excel-file#readme",
   "dependencies": {
     "axios": "^0.24.0",
+    "body-parse": "^0.1.0",
     "cors": "^2.8.5",
     "exceljs": "^4.3.0",
     "express": "^4.17.2",

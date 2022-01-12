@@ -1,7 +1,12 @@
 var express = require('express'); 
 var app = express(); 
 var port = 3000;
+
+const bodyParser = require("body-parser");
 const cors = require("cors");
+
+app.use(bodyParser.json());
+app.use(cors());
 
 
 const cell = '__EMPTY';
@@ -22,7 +27,7 @@ fileArray.map((item, index)=> {
 
   const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw: false });
 
-  console.log(jsonData)
+  // console.log(jsonData)
   const getBankInfo = {
     data0 : firstSheet['E25'].v,
     data1 : firstSheet['B28'].v,
@@ -108,7 +113,7 @@ const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
     if(key >=3 && key<=22) {
 
       if(value[1] == undefined) {
-        console.log("데이터가 없음------------------")
+        // console.log("데이터가 없음------------------")
       }
       else {
         const data2 = {
@@ -120,7 +125,7 @@ const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
           data4 : value[4],
           data5 : getBankInfo
         }
-        console.log('3이상 22이하',data2)
+        // console.log('3이상 22이하',data2)
         const result = globalData.push(data2);
          return result;
 
@@ -143,6 +148,15 @@ const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
 app.post('/', function(req,res) {
   // console.log(res.jsonData)
   return res.json(globalData)
+})
+app.post('/test', function(req, res) {
+  const result =  req.body;
+  console.log(req.body.testData.data.topic) //제목받음.
+  const topickInfo = req.body.testData.data.topic.data2;
+
+  //엑셀 생성 테스트
+  const book = xlsx.utils.book_new();
+  xlsx.writeFile(book, `${topickInfo}.xlsx`);
 })
 
 app.get('/', function(req, res) { 
