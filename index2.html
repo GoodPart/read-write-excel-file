@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+tr, td {
+  text-align: center;
+}
+</style>
+<body>
+
+<button class="btn-xlsx" type="button" onclick="makeTable()">엑셀로드</button>
+
+
+<div>
+  <p>1. 이름</p>
+  <input type="text" name="" placeholder="이름" onfocus="placeholder=''"  id="">
+  <p>2. 파일명</p>
+  <input type="text" name="" placeholder="파일명" onfocus="placeholder=''"  id="">
+  <p>3. 타입</p>
+  <input type="text" name="" placeholder="문화비, 자기계발비..." onfocus="placeholder=''" id="">
+  <p>4. 코드</p>
+  <input type="number" name="" placeholder="코드" onfocus="placeholder=''" id="">
+
+  <hr />
+  <button type="button" onclick="makeRow()">아이템 생성</button>
+  <table class="tg">
+    <thead>
+      <th class="tg-0lax">번호</th>
+      <th class="tg-0lax">일자</th>
+      <th class="tg-0lax">내용</th>
+      <th class="tg-0lax">금액</th>
+      <th class="tg-0lax">영수증</th>
+    </thead>
+    <tbody class="tbody tbody--01">
+      <tr class="tr tr--01">
+        <td class="item item00">1</td>
+        <td class="item item01">
+          <input type="text">
+        </td>
+        <td class="item item02">
+          <input type="text" >
+        </td>
+        <td class="item item03">
+          <input type="text" class="calcInput" onblur="calcCost()">
+        </td>
+        <td class="item item04">
+          <input type="text" >
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div>
+    청구 금액<p class="totalCost">0</p>
+  </div>
+
+
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  
+</div>
+
+<table class="tg">
+  <thead>
+    <tr>
+      <th class="tg-0lax">번호</th>
+      <th class="tg-0lax">일자</th>
+      <th class="tg-0lax">내용</th>
+      <th class="tg-0lax">금액</th>
+      <th class="tg-0lax">영수증</th>
+      <th class="tg-0lax">총액수</th>
+      <th class="tg-0lax">은행</th>
+      <th class="tg-0lax">이름</th>
+      <th class="tg-0lax">계좌번호</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+  </tbody>
+  </table>
+
+
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+//  const data = axios.post("/");
+ const tbody = document.querySelector("tbody");
+ 
+
+
+ const table = document.querySelector("table");
+ let globCount = 1;
+
+ // 클래스 넘버링시 사용
+ const addZero = (number)  => {
+    const data = number;
+    return result =  data >9 ? data : '0'+data;
+  }
+
+// 테이블 바디 생성
+function makeRow() {
+  globCount += 1;
+
+  
+
+  const addDataRaw = document.createElement("tr");
+  addDataRaw.classList.add("tr",`tr--${addZero(globCount)}`)
+  tbody.appendChild(addDataRaw)
+
+
+  const makedTr= document.querySelector(`.tr--${addZero(globCount)}`);
+
+  
+  for(let i = 0; i<5; i++) {
+    const makeCell = document.createElement("td");
+    makeCell.classList.add("item",`item${addZero(i)}`);
+    
+    makedTr.appendChild(makeCell)
+
+    if(i === 0) {
+      makeCell.innerHTML = globCount
+    }else {
+      const mkInput = document.createElement("input");
+
+      mkInput.setAttribute("id", `id--${globCount}--${i}`)
+      mkInput.setAttribute("type", "text")
+
+      if(i === 3) {
+        mkInput.classList.add("calcInput")
+      }
+
+      makeCell.appendChild(mkInput)
+    }
+
+  }
+
+
+}
+
+
+
+
+
+
+function calcCost() {
+   const costCells = document.querySelectorAll(".item03 input");
+   const array = [];
+   
+  [].forEach.call(costCells, function(item) {
+    // console.log(item.value)
+    function arrayPlus(result1){
+      var result=0;;
+      for(var i=0; i < array.length; i++){
+       result = result + array[i]
+      }
+      return result;
+    }
+    
+    const result22 = arrayPlus(array.push(Number(item.value)));
+    const totalCost = document.querySelector(".totalCost");
+    
+    totalCost.innerHTML = result22 >= 40000 ? 40000 : result22
+
+
+  })
+
+  
+}
+
+
+
+
+// const array = [];
+window.addEventListener("keyup", (e)=> {
+//  const costCells = document.querySelectorAll(".item03 input");
+
+ const elementTarget = e.target;
+ 
+ if(elementTarget.className == "calcInput") {
+  calcCost()
+  
+  // totalCost.innerHTML =
+
+  }
+  
+//   // console.log(array)
+} )
+
+// 테이블 바디 생성
+
+
+  data.then(function(res) {
+    const data = res.data;
+    const dataLength = data.length;
+
+    console.log(data)
+    data.forEach((ele, index1) => {
+
+      
+      
+
+      // 빈 테이블 생성
+      const makeTable = () => {
+        const addDataRaw = document.createElement("tr");
+        const mkRaw = addDataRaw.classList.add(`data${index1}`);
+        tbody.appendChild(addDataRaw)
+
+        if( index1 == 0) {
+
+          for(let i = 0; i<9; i++) {
+  
+            const addDataCell = document.createElement("td");
+            const mkCell = addDataCell.classList.add(`cell${i}`);
+            const makedCell = addDataRaw.appendChild(addDataCell);
+  
+            if(i >= 5 && i <=8) {
+              makedCell.setAttribute("rowspan", dataLength);
+            }
+          }
+        } else {
+          for(let i = 0; i<5; i++) {
+  
+            const addDataCell = document.createElement("td");
+            const mkCell = addDataCell.classList.add(`cell${i}`);
+            const makedCell = addDataRaw.appendChild(addDataCell);
+            
+          }
+        }
+      }
+
+      makeTable();
+      
+      // makeTable함수로 생성된 장소에 데이터 삽입.
+      Object.entries(ele).map(([key, value], index)=> {
+
+         
+        const test= tbody.querySelector(`.data${index1} .cell${index}`);
+
+          if(index1 == 0) {
+            
+
+            const test2=document.querySelector(`.data${index1} .cell${index}`);
+            test2.innerHTML = value;
+
+
+            if(index == 5) {
+              for(let j = 0; j<4; j++) {
+                const test2 = tbody.querySelector(`.data${index1} .cell${index+j}`)
+                const valueTable = Object.values(value); 
+    
+                test2.innerHTML =  valueTable[j];
+              }
+            }
+          }  else {
+            if(index < 5) {
+              test.innerHTML = value;
+            }
+          }
+        
+
+
+      })
+
+    });
+
+    
+
+  })
+
+
+;
+</script>
+</html>
