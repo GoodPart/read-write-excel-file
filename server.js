@@ -37,44 +37,6 @@ fileArray.map((item, index)=> {
 
 })
 
-
-
-// 데이터 스키마
-const testData = {
-  data : {
-    // 파일 명
-    topic : {
-      data1 : 202112, //날짜
-      data2 : "문화비", //문화비, 자기계발비...
-      data3 : "234", // 코드
-      data4 : "박경수", //이름
-    },
-    //사용 내역
-    item : [
-      {
-        data1 : 2021-12-22, 
-        data2 : "커피",
-        data3 : 9800,
-        data4 : true,
-      },
-      {
-        data1 : 2021-12-22, 
-        data2 : "커피",
-        data3 : 9800,
-        data4 : true,
-      },
-      // {...}
-    ],
-    // 은행 정보
-    bankInfo : {
-      data1 : "하나은행",
-      data2 : "박경수",
-      data3 : "373-911852-74107"
-    }
-  }
-}
-
-
 const excelFile = xlsx.readFile("./testData/202112_문화비(코드234)_박경수.xlsx");
 
 const sheetName = excelFile.SheetNames[0];
@@ -82,14 +44,6 @@ const firstSheet = excelFile.Sheets[sheetName];
 
 const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw: false });
 
-
-
-// 총 계산된 액수
-// console.log(firstSheet['E25'].v)
-//계좌 정보 - 은행, 이름, 계좌번호
-// console.log(firstSheet['B28'].v)
-// console.log(firstSheet['D28'].v)
-// console.log(firstSheet['E28'].v)
 
 const getBankInfo = {
   data0 : firstSheet['E25'].v,
@@ -147,16 +101,17 @@ const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
 // })
 app.post('/', function(req,res) {
   // console.log(res.jsonData)
+  
+
   return res.json(globalData)
 })
-app.post('/test', function(req, res) {
+app.post('/test', async function(req, res) {
   const result =  req.body;
-  console.log(req.body.testData.data.topic) //제목받음.
-  const topickInfo = req.body.testData.data.topic.data2;
+  const topickInfo = req.body.data;
 
-  //엑셀 생성 테스트
-  const book = xlsx.utils.book_new();
-  xlsx.writeFile(book, `${topickInfo}.xlsx`);
+  var user = await topickInfo;
+  console.log(user)
+
 })
 
 app.get('/', function(req, res) { 

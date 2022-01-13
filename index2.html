@@ -22,14 +22,19 @@ tr, td {
 
 
 <div>
-  <p>1. 이름</p>
-  <input type="text" name="topicName" placeholder="이름" onfocus="placeholder=''"  id="">
-  <p>2. 파일명</p>
+  
+  <p>1. 파일명</p>
   <input type="text" name="topicFileName" placeholder="파일명" onfocus="placeholder=''"  id="">
-  <p>3. 타입</p>
-  <input type="text" name="topicType" placeholder="문화비, 자기계발비..." onfocus="placeholder=''" id="">
-  <p>4. 코드</p>
-  <input type="number" name="topicCode" placeholder="코드" onfocus="placeholder=''" id="">
+  <p>2. 타입</p>
+  <input type="text" name="topicFileType" placeholder="문화비, 자기계발비..." onfocus="placeholder=''" id="">
+  <p>3. 코드</p>
+  <input type="number" name="topicUserCode" placeholder="코드" onfocus="placeholder=''" id="">
+  <p>4. 은행</p>
+  <input type="text" name="topicUserBank" placeholder="은행" onfocus="placeholder=''" id="">
+  <p>5. 이름</p>
+  <input type="text" name="topicUserName" placeholder="이름" onfocus="placeholder=''"  id="">
+  <p>6. 계좌번호</p>
+  <input type="text" name="topicUserBankCode" placeholder="계좌번호" onfocus="placeholder=''" id="">
 
   <hr />
   <button type="button" onclick="makeRow()">아이템 생성</button>
@@ -61,7 +66,7 @@ tr, td {
   </table>
 
   <div>
-    청구 금액 - <span class="totalCost">0</span>
+    청구 금액 -> <span class="totalCost">0</span>
   </div>
 
 
@@ -98,66 +103,82 @@ tr, td {
 </body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-
-
-
 // 데이터 스키마
-const testData = {
+let testData = {
   data : {
     // 파일 명
     topic : {
-      data1 : 202112, //날짜
-      data2 : "문화비", //문화비, 자기계발비...
-      data3 : "234", // 코드
-      data4 : "박경수", //이름
+      data0 : '파일명', //파일명
+      data1 : "타입", //문화비, 자기계발비...
+      data2 : "코드", // 코드 (number)
+      data3 : "은행", //하나은행
+      data4 : "이름", // 이름
+      data5 : "계좌번호" // 373-...
     },
     //사용 내역
     item : [
-      {
-        data1 : 2021-12-22, 
-        data2 : "커피",
-        data3 : 9800,
-        data4 : true,
-      },
-      {
-        data1 : 2021-12-22, 
-        data2 : "커피",
-        data3 : 9800,
-        data4 : true,
-      },
+      // {
+      //   data0 : 2021-12-22, 
+      //   data1 : "커피",
+      //   data2 : 9800,
+      //   data3 : true,
+      // },
       // {...}
     ],
-    // 은행 정보
-    bankInfo : {
-      data1 : "하나은행",
-      data2 : "박경수",
-      data3 : "373-911852-74107"
-    }
+    
   }
 }
 
-function loadXlsx() {
-  const topicInputInfoArray = ["topicName", "topicFileName", "topicType", "topicCode"];
+const goData = (data) => axios.post("http://localhost:3000/test", {
+  data
+})
 
+
+
+// 데이터 보내기
+function loadXlsx() {
+  const topicInputInfoArray = ["topicFileName", "topicFileType", "topicUserCode", "topicUserBank","topicUserName", "topicUserBankCode"];
+
+  let saveArray = [];
+
+  // topic 값 추가 map
   topicInputInfoArray.map((ele, index)=> {
     const target = document.querySelector(`input[name="${ele}"]`);
 
-    console.log(target.value)
-
-    testData.data.topic[index] = target.value
-
+    testData.data.topic[`data${index}`] = target.value;
+    // saveArray.push(testData.data.topic[index])
+    
   })
+  
 
-  goData
+  // item의 갯수 체크
+  const root = document.querySelector("tbody");
+  const rows = root.querySelectorAll("tr");
+  
+  // 각 row의 for문.
+  [].map.call(rows, (ele, index1) => {
+    const tr = ele;
+    // cell의 input값
+    const cells = tr.querySelectorAll(".item input");
+    const tempArray = []; //row의 데이터를 받을 array
+
+    // cell의 for문
+    [].map.call(cells, (ele2, index2) => {
+      tempArray.push(ele2.value);
+
+      if(index2 === cells.length-1) {
+        console.log("done")
+        testData.data.item[`data${index1}`] = tempArray 
+      }
+    })
+  })
+  console.log(testData)
+  goData(testData);
 }
 
 
 
-const goData =  axios.post("http://localhost:3000/test", {
-  testData
-}).then((res)=> {
-  console.log(res.data)
-})
+
 
 //  const data = axios.post("/");
  const tbody = document.querySelector("tbody");
@@ -240,12 +261,11 @@ function calcCost() {
 }
 
 
+// 총 코스트 계산
 window.addEventListener("keyup", (e)=> {
  const elementTarget = e.target;
  if(elementTarget.className == "calcInput") {
   calcCost()
-
-  
 
   }
 })
