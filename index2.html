@@ -131,8 +131,17 @@ let testData = {
 
 const goData = (data) => axios.post("http://localhost:3000/test", {
   data
+}).then(res => {
+  const data = res.data;
+  console.log(data)
+
 })
 
+
+goData.then(res=> {
+  const data = res;
+  console.log(data)
+})
 
 
 // 데이터 보내기

@@ -1,4 +1,5 @@
 var express = require('express'); 
+var router = express.Router(); // 라우터 생성
 var app = express(); 
 var port = 3000;
 
@@ -14,43 +15,25 @@ const xlsx = require("xlsx");
 const fs = require('fs');
 const dir = 'testData';
 
+
 let files = fs.readdirSync(dir);
 const fileArray = files;
-// console.log('디렉토리 구조 array',fileArray )
 
-
-fileArray.map((item, index)=> {
-  const excelFile = xlsx.readFile(`./testData/${item}`);
-
-  const sheetName = excelFile.SheetNames[0];
-  const firstSheet = excelFile.Sheets[sheetName];
-
-  const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw: false });
-
-  // console.log(jsonData)
-  const getBankInfo = {
-    data0 : firstSheet['E25'].v,
-    data1 : firstSheet['B28'].v,
-    data2 : firstSheet['D28'].v,
-    data3 : firstSheet['E28'].v
-  }
-
-})
-
-const excelFile = xlsx.readFile("./testData/202112_문화비(코드234)_박경수.xlsx");
+const excelFile = xlsx.readFile("./testData/1.xlsx");
 
 const sheetName = excelFile.SheetNames[0];
 const firstSheet = excelFile.Sheets[sheetName];
 
-const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw: false });
+const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw:true });
 
+console.log(jsonData)
 
-const getBankInfo = {
-  data0 : firstSheet['E25'].v,
-  data1 : firstSheet['B28'].v,
-  data2 : firstSheet['D28'].v,
-  data3 : firstSheet['E28'].v
-}
+// const getBankInfo = {
+//   data0 : firstSheet['E25'].v,
+//   data1 : firstSheet['B28'].v,
+//   data2 : firstSheet['D28'].v,
+//   data3 : firstSheet['E28'].v
+// }
 
 let globalIndex = 1;
 
@@ -112,7 +95,19 @@ app.post('/test', async function(req, res) {
   var user = await topickInfo;
   console.log(user)
 
+  const file = `${__dirname}/testData/1.xlsx`;
+  res.download(file); // Set disposition and send it.
+
 })
+
+// 파일 다운로드 엑셀파일을 받고 보면 바로 락걸림;; 안보면 ㄱㅊ
+app.get('/download', function(req, res){
+  const file = `${__dirname}/testData/1.xlsx`;
+  res.download(file); // Set disposition and send it.
+});
+
+
+
 
 app.get('/', function(req, res) { 
   res.sendFile(__dirname+ '/index2.html');
