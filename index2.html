@@ -137,43 +137,71 @@ const goData = (data) => axios.post("http://localhost:3000/test", {
 
 // 데이터 보내기
 function loadXlsx() {
-  const topicInputInfoArray = ["topicFileName", "topicFileType", "topicUserCode", "topicUserBank","topicUserName", "topicUserBankCode"];
+  const dataSchema = testData;
+  const topicInputInfoArray = ["topicFileName", "topicFileType", "topicUserCode", "topicUserBank", "topicUserName", "topicUserBankCode"];
 
-  let saveArray = [];
 
-  // topic 값 추가 map
-  topicInputInfoArray.map((ele, index)=> {
-    const target = document.querySelector(`input[name="${ele}"]`);
 
-    testData.data.topic[`data${index}`] = target.value;
-    // saveArray.push(testData.data.topic[index])
+  const topickValue = () => {
+    let tempTopickArray = [];
     
-  })
-  
-
-  // item의 갯수 체크
-  const root = document.querySelector("tbody");
-  const rows = root.querySelectorAll("tr");
-  
-  // 각 row의 for문.
-  [].map.call(rows, (ele, index1) => {
-    const tr = ele;
-    // cell의 input값
-    const cells = tr.querySelectorAll(".item input");
-    const tempArray = []; //row의 데이터를 받을 array
-
-    // cell의 for문
-    [].map.call(cells, (ele2, index2) => {
-      tempArray.push(ele2.value);
-
-      if(index2 === cells.length-1) {
-        console.log("done")
-        testData.data.item[`data${index1}`] = tempArray 
-      }
+    topicInputInfoArray.map((ele, index)=> {
+       const target = document.querySelector(`input[name="${ele}"]`);
+       
+       return tempTopickArray.push(target.value);
     })
-  })
-  console.log(testData)
-  goData(testData);
+    const topick = {
+      data0 : tempTopickArray[0],
+      data1 : tempTopickArray[1],
+      data2 : tempTopickArray[2],
+      data3 : tempTopickArray[3],
+      data4 : tempTopickArray[4],
+      data5 : tempTopickArray[5],
+    }
+
+    return topick
+   
+  }
+
+  const itemValue = () => {
+    // item의 갯수 체크
+    const root = document.querySelector("tbody");
+    const rows = root.querySelectorAll("tr");
+    
+
+    let tempTopickArray2 = [];
+
+    // 각 row의 for문.
+    [].map.call(rows, (ele, index1) => {
+      const tr = ele;
+      // cell의 input값
+      const cells = tr.querySelectorAll(".item input");
+      const tempArray = []; //row의 데이터를 받을 array
+
+      // cell의 for문
+      [].map.call(cells, (ele2, index2) => {
+        return tempArray.push(ele2.value);
+      })
+
+      tempTopickArray2.push({tempArray})
+
+
+    })
+
+    return tempTopickArray2
+    
+  }
+
+
+  const resultObject = {
+    topic : topickValue(),
+    item : itemValue()
+  }
+
+  console.log(resultObject)
+
+  
+  goData(resultObject);
 }
 
 
