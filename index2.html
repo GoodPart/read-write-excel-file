@@ -129,7 +129,7 @@ let testData = {
   }
 }
 
-const goData = (data) => axios.post("http://localhost:3000/test", {
+const goData = (data) => axios.post("http://localhost:3000/download", {
   data
 }).then(res => {
   const data = res.data;
@@ -138,10 +138,7 @@ const goData = (data) => axios.post("http://localhost:3000/test", {
 })
 
 
-goData.then(res=> {
-  const data = res;
-  console.log(data)
-})
+
 
 
 // 데이터 보내기
@@ -192,7 +189,7 @@ function loadXlsx() {
         return tempArray.push(ele2.value);
       })
 
-      tempTopickArray2.push({tempArray})
+      tempTopickArray2.push(tempArray)
 
 
     })
@@ -211,7 +208,13 @@ function loadXlsx() {
 
   
   goData(resultObject);
+
+  goData.then(res=> {
+  // const data = res;
+  // console.log(data)
+})
 }
+
 
 
 

@@ -19,14 +19,14 @@ const dir = 'testData';
 let files = fs.readdirSync(dir);
 const fileArray = files;
 
-const excelFile = xlsx.readFile("./testData/1.xlsx");
+const excelFile = xlsx.readFile("./testData/202112_문화비(코드234)_박경수.xlsx");
 
 const sheetName = excelFile.SheetNames[0];
 const firstSheet = excelFile.Sheets[sheetName];
 
 const jsonData = xlsx.utils.sheet_to_json(firstSheet, {header: 1, raw:true });
 
-console.log(jsonData)
+// console.log(jsonData)
 
 // const getBankInfo = {
 //   data0 : firstSheet['E25'].v,
@@ -60,11 +60,11 @@ const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
           data2 : value[2],
           data3 : value[3],
           data4 : value[4],
-          data5 : getBankInfo
+          // data5 : getBankInfo
         }
         // console.log('3이상 22이하',data2)
-        const result = globalData.push(data2);
-         return result;
+        // const result = globalData.push(data2);
+        //  return result;
 
       }
       
@@ -73,18 +73,13 @@ const getXlxsValue = Object.entries(jsonData).map(([key, value], index)=> {
       
 
     }
+    
 })
 
 
 
 
-
-// app.post("/getData", function(req,res) {
-//   return res.json(jsonData)
-// })
 app.post('/', function(req,res) {
-  // console.log(res.jsonData)
-  
 
   return res.json(globalData)
 })
@@ -95,15 +90,70 @@ app.post('/test', async function(req, res) {
   var user = await topickInfo;
   console.log(user)
 
-  const file = `${__dirname}/testData/1.xlsx`;
-  res.download(file); // Set disposition and send it.
+  // const file = `${__dirname}/testData/1.xlsx`;
+  // res.download(file); // Set disposition and send it.
 
 })
 
 // 파일 다운로드 엑셀파일을 받고 보면 바로 락걸림;; 안보면 ㄱㅊ
-app.get('/download', function(req, res){
-  const file = `${__dirname}/testData/1.xlsx`;
-  res.download(file); // Set disposition and send it.
+app.post('/download', async function(req, res){
+  // data = [{
+  //   firstName: 'John',
+  //   lastName: 'Doe'
+  //  }, {
+  //   firstName: 'Smith',
+  //   lastName: 'Peters'
+  //  }, {
+  //   firstName: 'Alice',
+  //   lastName: 'Lee'
+  //  }]
+
+   const topickInfo = req.body.data.item;
+   const fileName = req.body.data.topic.data0;
+
+   var user = await topickInfo;
+
+
+  const excelFile = xlsx.readFile("./testData/202112_문화비(코드234)_박경수.xlsx");
+
+  const sheetName = excelFile.SheetNames[0];
+  const firstSheet = excelFile.Sheets[sheetName];
+
+
+  const jsonData = xlsx.utils.sheet_to_json(firstSheet, { raw:false });
+  console.log(jsonData)
+  
+
+  // 데이터 수정
+  const changeValue = jsonData[3].__EMPTY = topickInfo[0][0]
+
+
+
+   const ws = xlsx.utils.json_to_sheet(jsonData)
+
+   ws["!cols"] = [
+     {wpx : 50},
+     {wpx : 300},
+     {wpx : 200},
+     {wpx : 100},
+   ]
+
+  //  console.log(xlsx.utils.sheet_to_csv(ws))
+   const wb = xlsx.utils.book_new()
+   xlsx.utils.book_append_sheet(wb, ws, 'Responses')
+   const result = xlsx.writeFile(wb, `./testData/${fileName}.xlsx`)
+
+
+
+  // 엑셀 파일 생성
+  //  const ws = xlsx.utils.json_to_sheet(user,{skipHeader: true})
+  //  const wb = xlsx.utils.book_new()
+  //  xlsx.utils.book_append_sheet(wb, ws, 'Responses')
+  //  const result = xlsx.writeFile(wb, `./testData/${fileName}.xlsx`)
+
+  // 다운로드 get으로 조회해야 다운로드 됨. app.post -> app.get
+  // const file = `${__dirname}/testData/sampleData.export.xlsx`;
+  // res.download(file); // Set disposition and send it.
 });
 
 
